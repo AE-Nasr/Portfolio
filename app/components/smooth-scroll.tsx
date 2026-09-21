@@ -26,6 +26,10 @@ import { useDeviceTier } from "@/app/core/hooks/useDeviceTier";
 import { registerLenis, EASE_OUT_EXPO, SCROLL_DURATION } from "@/app/core/utils/scroll";
 import KeyboardScroll from "@/app/core/components/KeyboardScroll";
 
+/* ── ظبط سرعة السكرول من هنا ── (العجلة + الـ touchpad) */
+const WHEEL_LERP = 0.1;
+const WHEEL_MULTIPLIER = 1;
+
 /**
  * Lives INSIDE <ReactLenis>, so useLenis() can actually reach the context.
  * Renders nothing — it only wires Lenis's scroll loop to GSAP's ticker.
@@ -108,33 +112,21 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       root
       options={{
         /*
-         * ── لماذا lerp وحده، من غير duration ──
+         * سرعة سكرول العجلة والـ touchpad (الاتنين بيعدّوا من هنا).
          *
-         * الاتنين كانوا مكتوبين مع بعض. Lenis بيستخدم **واحد بس**: لو
-         * `lerp` متعرّف، بيشتغل بنظام الـ interpolation ويتجاهل
-         * `duration` تماماً لحركة العجلة. فـ `duration: 1.2` كانت سطر
-         * ميت — أي حد جه يعدّل السرعة منها مكانش هيلاقي أي فرق.
+         * lerp = نسبة المسافة المتبقية اللي بتتقطع كل فريم. أعلى = أسرع.
+         * Lenis بيستخدم lerp أو duration، مش الاتنين — فـ lerp لوحده كفاية.
          *
-         * ── القيم ──
+         * wheelMultiplier = مسافة كل "نقرة" عجلة أو حركة إصبعين على الـ
+         * touchpad. 1 = المسافة الطبيعية، أقل = أبطأ، أكتر = أسرع.
          *
-         * lerp = نسبة المسافة المتبقية اللي بتتقطع كل فريم. أقل = أبطأ
-         * وأنعم. نزلت 0.07 → 0.045 → **0.032**: الصفحة بتستقرّ في حوالي
-         * ثانية ونص بدل نص ثانية.
-         *
-         * ولاحظ إن lerp نفسه **هو** منحنى expo-out: كل فريم بيقطع نسبة
-         * ثابتة من الباقي، يعني السرعة بتقلّ باستمرار وبتقارب الصفر من
-         * غير ما توصله. ده نفس شكل حركة أبل بالظبط، وعشان كده السكرول
-         * بالعجلة بيحسّ صح من غير ما نظبّط منحنى بإيدنا.
-         *
-         * wheelMultiplier = مسافة كل نقرة عجلة. 0.85 بتخلي كل نقرة تقطع
-         * أقل، وده اللي بيدّي الصور اللي تحت الطية وقت تخلص تحميل قبل ما
-         * توصل لنص الشاشة.
-         *
-         * الاتنين مع بعض هما اللي بيدّوا الإحساس اللي إنت طالبه: نزول
-         * على مهله، مش فرملة.
+         * القيم اللي كانت قبل كده: lerp 0.032 (high) / 0.06 (mid) و
+         * wheelMultiplier 0.72 — دي كانت مقصودة بطيئة. القيم الجديدة هي
+         * الـ defaults بتاعة Lenis نفسها (lerp 0.1, wheelMultiplier 1)،
+         * ولو لسه عايزها أسرع زوّد الرقمين، ولو عايزها أبطأ نزّلهم.
          */
-        lerp: tier === "mid" ? 0.06 : 0.032,
-        wheelMultiplier: 0.72,
+        lerp: WHEEL_LERP,
+        wheelMultiplier: WHEEL_MULTIPLIER,
         smoothWheel: true,
 
         /*
