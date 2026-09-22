@@ -283,7 +283,7 @@ const SenseiHome = memo(function SenseiHome() {
             <a href="https://www.instagram.com/ahmed_emad_nasr/" target="_blank" rel="noopener noreferrer" className={styles.iconInstagram} aria-label="Instagram">
               <Icon name="faInstagram" />
             </a>
-            <a href="https://github.com/Ahmed-Emad-Nasr" target="_blank" rel="noopener noreferrer" className={styles.iconGithub} aria-label="GitHub">
+            <a href="https://github.com/AE-Nasr" target="_blank" rel="noopener noreferrer" className={styles.iconGithub} aria-label="GitHub">
               <Icon name="faGithub" />
             </a>
           </div>
