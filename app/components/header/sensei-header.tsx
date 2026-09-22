@@ -53,10 +53,10 @@ export default function SenseiHeader() {
     const target = document.getElementById(section);
     if (!target) return;
     
-    /* كان `behavior: "auto"` — قفزة فورية. النav هو أكتر حاجة بتتضغط في
-       الموقع، فكانت أوضح حتة الحركة فيها مقطوعة. scrollToElement بيحسب
-       ارتفاع الهيدر بنفسه ويعدّي من نفس محرّك العجلة. */
-    const doScroll = () => scrollToElement(target);
+    /* رجعت قفزة فورية بطلب صريح — بدل السكرول الناعم اللي كان هنا.
+       scrollToElement لسه بتحسب ارتفاع الهيدر الثابت، بس immediate:true
+       بيتخطى محرك Lenis ويقفز على طول. */
+    const doScroll = () => scrollToElement(target, { immediate: true });
 
     if (isMenuOpen) {
       setIsMenuOpen(false);

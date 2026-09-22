@@ -74,8 +74,8 @@ export default function SenseiHeader() {
     const target = document.getElementById(targetId);
     if (!target) return;
 
-    /* كان `behavior: "auto"` — قفزة فورية، زي الهيدر الرئيسي بالظبط. */
-    const doScroll = () => scrollToElement(target);
+    /* رجعت قفزة فورية بطلب صريح، زي الهيدر الرئيسي بالظبط. */
+    const doScroll = () => scrollToElement(target, { immediate: true });
 
     if (isMenuOpen) { setIsMenuOpen(false); requestAnimationFrame(doScroll); }
     else doScroll();
