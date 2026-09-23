@@ -74,7 +74,7 @@ const LINK_COMMANDS: Command[] = [
     hint: "opens in a new tab",
     group: "Links",
     keywords: "code repos source",
-    run: () => window.open("https://github.com/Ahmed-Emad-Nasr", "_blank", "noopener"),
+    run: () => window.open("https://github.com/AE-Nasr", "_blank", "noopener"),
   },
   {
     id: "link-x",

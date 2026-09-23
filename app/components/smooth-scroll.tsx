@@ -3,17 +3,22 @@
 /*
  * smooth-scroll.tsx — FIXED
  *
- * Three bugs in the previous version:
+ * Bugs fixed:
  *
  * 1. `useLenis()` was called in the SAME component that renders <ReactLenis>.
  *    The context provider lives inside the returned JSX, so the parent can
  *    never read it — `lenis` was always null and the entire useEffect body
- *    never ran. GSAP/ScrollTrigger were bundled (~70 KB) and did nothing.
- *    Fix: the hook now lives in a CHILD of the provider.
+ *    never ran. Fix: the hook now lives in a CHILD of the provider.
  *
- * 2. `gsap.ticker.add(...)` was never removed on cleanup (only `lenis.off`
- *    was). With reactStrictMode: true the effect runs twice in dev, so raf
- *    callbacks stacked up. Fix: keep the callback reference and remove it.
+ * 2. The GSAP/ScrollTrigger bridge that used to live here was calling
+ *    `lenis.raf()` a second time from GSAP's own ticker — on top of the
+ *    raf loop Lenis already runs by itself (`autoRaf` defaults to `true`
+ *    in `lenis-react`, confirmed in its source). Every scroll frame on
+ *    every page was doing that work twice. And GSAP + ScrollTrigger
+ *    (~70 KB) were being downloaded for it, even though nothing else in
+ *    this codebase uses ScrollTrigger (checked: no other match in app/).
+ *    Fix: removed the bridge. Lenis drives its own loop; nothing else
+ *    needs to piggyback on it.
  *
  * 3. Lenis ran at full strength on every device. Smooth-scroll hijacking is
  *    a top cause of stutter on low-end phones, and it fights native momentum
@@ -32,58 +37,17 @@ const WHEEL_MULTIPLIER = 1;
 
 /**
  * Lives INSIDE <ReactLenis>, so useLenis() can actually reach the context.
- * Renders nothing — it only wires Lenis's scroll loop to GSAP's ticker.
+ * Renders nothing — كل شغلها إنها تسجّل الـ instance عشان الأزرار
+ * واللينكات (scrollToElement/scrollToTop في core/utils/scroll) تعدّي من
+ * نفس المحرّك اللي العجلة بتعدّي منه، بدل ما كل واحد فيهم ينده
+ * window.scrollTo بمنحنى المتصفح الثابت لوحده.
  */
-function LenisGsapBridge() {
+function LenisRegister() {
   const lenis = useLenis();
 
-  /* نسجّل الـ instance في core/utils/scroll عشان كل زرار واختصار ولينك
-     في النav يعدّي من نفس المحرّك اللي العجلة بتعدّي منه.
-
-     من غير ده كل واحد فيهم بينادي window.scrollTo بنفسه. ودي بتشتغل —
-     Lenis بيزامن حالته مع الحركة الأصلية — بس بمنحنى المتصفح الثابت
-     (~٣٠٠ms، مفيش duration ولا easing في المواصفات). فالعجلة تنزل في
-     ثانية والزرار يطقّ في تلت ثانية. حركتين في موقع واحد. */
   useEffect(() => {
     registerLenis(lenis ?? null);
     return () => registerLenis(null);
-  }, [lenis]);
-
-  useEffect(() => {
-    if (!lenis) return;
-
-    let cancelled = false;
-    let cleanup: (() => void) | undefined;
-
-    // GSAP + ScrollTrigger are ~70 KB. Load them only once smooth scroll is
-    // actually active, instead of shipping them to every visitor up front.
-    (async () => {
-      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
-        import("gsap"),
-        import("gsap/ScrollTrigger"),
-      ]);
-      if (cancelled) return;
-
-      gsap.registerPlugin(ScrollTrigger);
-
-      const onScroll = () => ScrollTrigger.update();
-      lenis.on("scroll", onScroll);
-
-      // Keep the reference so we can actually remove it later.
-      const tick = (time: number) => lenis.raf(time * 1000);
-      gsap.ticker.add(tick);
-      gsap.ticker.lagSmoothing(0);
-
-      cleanup = () => {
-        lenis.off("scroll", onScroll);
-        gsap.ticker.remove(tick);
-      };
-    })();
-
-    return () => {
-      cancelled = true;
-      cleanup?.();
-    };
   }, [lenis]);
 
   return null;
@@ -140,7 +104,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
         syncTouch: false,
       }}
     >
-      <LenisGsapBridge />
+      <LenisRegister />
       {/* الكيبورد. Lenis بيمسك العجلة واللمس بس، مفيش تعامل مع
           الكيبورد فيه — فمن غير ده الأسهم وPage Down بيقفّزوا. */}
       <KeyboardScroll />

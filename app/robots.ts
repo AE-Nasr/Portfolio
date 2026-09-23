@@ -3,7 +3,7 @@
  * Author: Ahmed Emad Nasr
  *
  * ⚠️ Important: crawlers read robots.txt from the domain root only — i.e.
- * https://ahmed-emad-nasr.github.io/robots.txt, not /Portfolio/robots.txt.
+ * https://ae-nasr.github.io/robots.txt, not /Portfolio/robots.txt.
  * That root is shared across all your GitHub Pages projects, so it is not
  * under this repository's control.
  *

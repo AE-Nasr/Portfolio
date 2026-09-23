@@ -29,6 +29,19 @@ export type Achievement = {
 
 export const achievements: readonly Achievement[] = [
   {
+    /*
+     * من الـ CV — كانت غايبة كعنصر مستقل هنا. ⚠️ الـ CV بيقول "8th of 900"،
+     * والموقع في experience.ts (وصف تعليم Benha University) لسه بيقول
+     * "5th out of 900" — رقمين مختلفين لنفس الإنجاز، والاتنين موجودين
+     * دلوقتي على نفس صفحة الـ CV. ده تناقض محتاج قرار منك، مش حاجة ناقصة،
+     * فسبته زي ما هو في experience.ts.
+     */
+    id: "academic-excellence",
+    title: "Ranked 8th of 900",
+    context: "Information Security & Digital Forensics, Benha University",
+    kind: "rank",
+  },
+  {
     id: "thm-top-1",
     title: "Top 1% globally",
     context: "TryHackMe",

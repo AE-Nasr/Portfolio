@@ -25,8 +25,8 @@ export const CV_CONTACT = {
   email: "ahmed.em.nasr@gmail.com",
   phone: "+20 101 397 2690",
   linkedin: { label: "linkedin.com/in/ahmed-emad-nasr", href: "https://www.linkedin.com/in/ahmed-emad-nasr/" },
-  github: { label: "github.com/Ahmed-Emad-Nasr", href: "https://github.com/Ahmed-Emad-Nasr" },
-  site: { label: "ahmed-emad-nasr.github.io/Portfolio", href: "https://ahmed-emad-nasr.github.io/Portfolio/" },
+  github: { label: "github.com/AE-Nasr", href: "https://github.com/AE-Nasr" },
+  site: { label: "ae-nasr.github.io/Portfolio", href: "https://ae-nasr.github.io/Portfolio/" },
 } as const;
 
 /** Related coursework — present in the PDF, absent from experience.ts */

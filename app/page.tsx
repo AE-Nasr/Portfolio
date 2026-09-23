@@ -31,11 +31,11 @@ export const metadata: Metadata = {
     title: "Ahmed Emad Nasr | SOC & Cybersecurity Analyst",
     description:
       "Real SOC/IR case reports, security projects, malware analysis, and cybersecurity training impact by Ahmed Emad Nasr.",
-    url: "https://ahmed-emad-nasr.github.io/Portfolio/",
+    url: "https://ae-nasr.github.io/Portfolio/",
     type: "website",
     images: [
       {
-        url: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp",
+        url: "https://ae-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp",
         width: 1200,
         height: 630,
         alt: "Ahmed Emad Nasr SOC portfolio",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     title: "Ahmed Emad Nasr | SOC & Incident Response Analyst",
     description:
       "Explore SOC investigations, DFIR workflows, malware analysis cases, and detection engineering.",
-    images: ["https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp"],
+    images: ["https://ae-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp"],
   },
 };
 
@@ -57,14 +57,14 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
   "@graph": [
     {
       "@type": "ProfilePage",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#main-profile-page",
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
+      "@id": "https://ae-nasr.github.io/Portfolio/#main-profile-page",
+      url: "https://ae-nasr.github.io/Portfolio/",
       name: "Ahmed Emad Nasr SOC Analyst Portfolio",
       inLanguage: "en",
     },
     {
       "@type": "Service",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#service-soc-ir",
+      "@id": "https://ae-nasr.github.io/Portfolio/#service-soc-ir",
       name: "SOC Monitoring and Incident Response Support",
       provider: {
         "@type": "Person",
@@ -73,7 +73,7 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       areaServed: "Worldwide",
       serviceType: ["SOC Monitoring", "Incident Response", "Threat Hunting", "Security Training", "Digital Forensics"],
       /* كان #Contact — القسم اتشال، والـ anchor بقى ميت. */
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
+      url: "https://ae-nasr.github.io/Portfolio/",
     },
   ],
 });

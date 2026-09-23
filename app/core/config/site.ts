@@ -15,7 +15,7 @@
  *   absent or false       → set this false (the build emits blog/case-x.html)
  */
 
-export const SITE_BASE_URL = "https://ahmed-emad-nasr.github.io/Portfolio";
+export const SITE_BASE_URL = "https://ae-nasr.github.io/Portfolio";
 
 /*
  * This was true, and the deployed site answers /Portfolio/blog **without**

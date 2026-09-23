@@ -2,7 +2,7 @@
 import dynamic from "next/dynamic";
 import React, { useCallback, useMemo, useState, useEffect, useRef, useDeferredValue } from "react";
 import { blogYoutubeVideos, blogYoutubePlaylists, blogFeaturedYoutubeVideo, YOUTUBE_CHANNEL_URL } from "@/app/core/config/youtube";
-import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/cases";
+import { caseScreenshotsByEvidenceId } from "@/app/core/config/cases";
 import styles from "./page.module.css";
 import { formatDate, normalizePublicHref } from "./blog-utils";
 import type { PdfResource, GalleryState } from "./blog-types";
@@ -23,105 +23,40 @@ const KanjiDivider = dynamic(() => import("@/app/core/components/KanjiDivider"))
 const BlogGalleryModal = dynamic(() => import("./components/BlogGalleryModal"), { ssr: false });
 
 /*
- * كارت الـ CV بيتحقن في مكتبة البلوج، بس هو **مش** case: مفيش صفحة
- * بتتولّد ليه من generateStaticParams (اللي بيقرا caseEvidenceLibrary بس).
- *
- * فزرار "Open case" كان بيبني اللينك من الـ id ويودّي على
- *     /Portfolio/blog/soc-analyst-cv  →  404
- * على الموقع المنشور.
- *
- * detailHref بيوجّهه لصفحة /cv الحقيقية بدل صفحة متولّدتش.
- */
-const cvResource: PdfResource = {
-  id: "soc-analyst-cv",
-  title: "Ahmed Emad Nasr SOC & Cybersecurity Analyst CV",
-  platform: "Professional Profile",
-  type: "PDF CV",
-  href: "Assets/cv/AhmedEmadNasr_CV.pdf",
-  detailHref: "/cv",
-};
-
-const wannacryId = "malware-analysis-wannacry";
-const wannacryCase = caseEvidenceLibrary.find((item) => item.id === wannacryId);
-
-const blogPdfResources: PdfResource[] = wannacryCase 
-  ? [cvResource, wannacryCase, ...caseEvidenceLibrary.filter(item => item.id !== wannacryId)] 
-  : [cvResource, ...caseEvidenceLibrary];
-
-
-/*
- * حارس: أي عنصر في المكتبة لازم يكون ليه صفحة تفاصيل موجودة فعلاً — يا إما
- * لأنه case (والـ id بتاعه في caseEvidenceLibrary) يا إما لأنه محدد
- * detailHref بنفسه.
- *
- * من غير الفحص ده، إضافة أي كارت مش case بتطلّع لينك 404 صامت — ومحدش
- * بياخد باله غير لما حد يدوس عليه على الموقع المنشور، وده اللي حصل بالظبط
- * مع كارت الـ CV.
- */
-const CASE_IDS = new Set(caseEvidenceLibrary.map((item) => item.id));
-for (const item of blogPdfResources) {
-  if (!item.detailHref && !CASE_IDS.has(item.id)) {
-    throw new Error(
-      `[blog] "${item.id}" is in the library but has no generated case page. ` +
-      `Either add it to caseEvidenceLibrary, or give it an explicit detailHref.`,
-    );
-  }
-}
-
-const PDF_DATE_MS = new Map(blogPdfResources.map((item) => [item.id, item.date ? new Date(item.date).getTime() : 0]));
-
-// ─── Search index ────────────────────────────────────────────────────────────
-// كل الكلام اللي ممكن حد يدوّر بيه على case واحدة، متجمّع في نص واحد lowercase
-// مرة واحدة وقت تحميل الموديول. البحث بعد كده مجرد includes() — يعني مفيش
-// أي معالجة نصوص متكررة مع كل حرف بيتكتب.
-const SEARCH_INDEX = new Map<string, string>(
-  blogPdfResources.map((item) => [
-    item.id,
-    [
-      item.title,
-      item.description,
-      item.platform,
-      item.type,
-      item.category,
-      item.difficulty,
-      ...(item.tags ?? []),
-      ...(item.tools ?? []),
-      ...(item.skillsGained ?? []),
-    ]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase(),
-  ]),
-);
-
-/** عدّاد بسيط بيرجّع القيم مرتبة بالأكتر ظهوراً */
-const countValues = (values: (string | undefined)[]): Facet[] => {
-  const counts = new Map<string, number>();
-  for (const value of values) {
-    if (!value) continue;
-    counts.set(value, (counts.get(value) ?? 0) + 1);
-  }
-  return [...counts.entries()]
-    .map(([value, count]) => ({ value, count }))
-    .sort((a, b) => b.count - a.count || a.value.localeCompare(b.value));
-};
-
-const CATEGORY_FACETS = countValues(caseEvidenceLibrary.map((item) => item.category));
-
-// الأدوات كتير، فبناخد الأشهر بس — قايمة chips طويلة أوي بتبقى ضوضا مش فلترة
-const TOOL_FACETS = countValues(
-  caseEvidenceLibrary.flatMap((item) => [...(item.tools ?? [])]),
-).slice(0, 12);
-
-/*
  * `startHere` بييجي جاهز مرندر من page.tsx (Server Component). لو الملف ده
  * استورد الكومبوننت مباشرة كان هيبقى client component ويحزّم مكتبة الـ
  * cases في bundle المتصفح — نفس السبب اللي خلّى خريطة ATT&CK تتبعت كـ prop
  * في الصفحة الرئيسية.
+ *
+ * sortedPdfs / searchIndex / categoryFacets / toolFacets وأرقام العداد
+ * التلاتة كلها محسوبة في page.tsx وقت الـ build دلوقتي — قبل كده كانت
+ * بتتحسب هنا (في المتصفح) مع كل تحميل صفحة. caseScreenshotsByEvidenceId
+ * لسه مستوردة هنا مباشرة لأن الجاليري محتاج مسارات الصور الفعلية وقت
+ * التفاعل، مش مجرد أرقام.
  */
-type BlogPageClientProps = { startHere?: React.ReactNode };
+type BlogPageClientProps = {
+  startHere?: React.ReactNode;
+  sortedPdfs: PdfResource[];
+  searchIndex: Record<string, string>;
+  categoryFacets: Facet[];
+  toolFacets: Facet[];
+  totalCasesCount: number;
+  casesWithScreenshotsCount: number;
+  totalScreenshotAssets: number;
+  cvResourceId: string;
+};
 
-export default function BlogPageClient({ startHere }: BlogPageClientProps) {
+export default function BlogPageClient({
+  startHere,
+  sortedPdfs,
+  searchIndex,
+  categoryFacets,
+  toolFacets,
+  totalCasesCount,
+  casesWithScreenshotsCount,
+  totalScreenshotAssets,
+  cvResourceId,
+}: BlogPageClientProps) {
   const [gallery, setGallery] = useState<GalleryState | null>(null);
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
   const [scrolled, setScrolled] = useState(false);
@@ -135,21 +70,6 @@ export default function BlogPageClient({ startHere }: BlogPageClientProps) {
   // اتأخرت فريم أو اتنين. أرخص وأدق من debounce يدوي.
   const deferredQuery = useDeferredValue(query);
 
-  const sortedPdfs = useMemo(() => {
-    return [...blogPdfResources].sort((a, b) => {
-      if (a.id === cvResource.id) return -1;
-      if (b.id === cvResource.id) return 1;
-      if (a.id === wannacryId) return -1;
-      if (b.id === wannacryId) return 1;
-
-      const aShots = (caseScreenshotsByEvidenceId[a.id] ?? []).length > 0;
-      const bShots = (caseScreenshotsByEvidenceId[b.id] ?? []).length > 0;
-      if (aShots !== bShots) return aShots ? -1 : 1;
-      
-      return (PDF_DATE_MS.get(b.id) ?? 0) - (PDF_DATE_MS.get(a.id) ?? 0);
-    });
-  }, []);
-
   const isFiltering =
     deferredQuery.trim() !== "" || activeCategory !== null || activeTools.length > 0;
 
@@ -160,9 +80,9 @@ export default function BlogPageClient({ startHere }: BlogPageClientProps) {
 
     return sortedPdfs.filter((item) => {
       // الـ CV مش case — بيختفي أول ما تبدأ تفلتر عشان مياخدش مكان نتيجة
-      if (item.id === cvResource.id) return false;
+      if (item.id === cvResourceId) return false;
 
-      if (needle && !(SEARCH_INDEX.get(item.id) ?? "").includes(needle)) return false;
+      if (needle && !(searchIndex[item.id] ?? "").includes(needle)) return false;
       if (activeCategory && item.category !== activeCategory) return false;
 
       // OR جوه نفس الفلتر: "وريني اللي فيه Wazuh أو Volatility"
@@ -173,7 +93,7 @@ export default function BlogPageClient({ startHere }: BlogPageClientProps) {
 
       return true;
     });
-  }, [sortedPdfs, isFiltering, deferredQuery, activeCategory, activeTools]);
+  }, [sortedPdfs, isFiltering, deferredQuery, activeCategory, activeTools, searchIndex, cvResourceId]);
 
   // ── مزامنة الفلاتر مع الـ URL ───────────────────────────────────────────
   // مش بنستخدم useSearchParams / router.replace عن قصد: الأولى بتفرض Suspense
@@ -320,14 +240,14 @@ export default function BlogPageClient({ startHere }: BlogPageClientProps) {
           <BlogFilterBar
             query={query}
             onQueryChange={setQuery}
-            categories={CATEGORY_FACETS}
+            categories={categoryFacets}
             activeCategory={activeCategory}
             onCategoryChange={setActiveCategory}
-            tools={TOOL_FACETS}
+            tools={toolFacets}
             activeTools={activeTools}
             onToolToggle={toggleTool}
             resultCount={visiblePdfs.length}
-            totalCount={caseEvidenceLibrary.length}
+            totalCount={totalCasesCount}
             onReset={resetFilters}
           />
         }
@@ -338,9 +258,9 @@ export default function BlogPageClient({ startHere }: BlogPageClientProps) {
       <KanjiDivider text="Reports • Screenshots • Investigation • Evidence" reverse angle={-1.2} />
       
       <BlogMediaSections
-        totalCasesCount={caseEvidenceLibrary.length} 
-        casesWithScreenshotsCount={caseEvidenceLibrary.filter(i => (caseScreenshotsByEvidenceId[i.id] ?? []).length > 0).length}
-        totalScreenshotAssets={Object.values(caseScreenshotsByEvidenceId).reduce((sum, shots) => sum + shots.length, 0)}
+        totalCasesCount={totalCasesCount} 
+        casesWithScreenshotsCount={casesWithScreenshotsCount}
+        totalScreenshotAssets={totalScreenshotAssets}
         filteredChannelVideos={channelVideos} 
         filteredPlaylists={blogYoutubePlaylists}
         featuredVideo={blogFeaturedYoutubeVideo} activeEmbeds={activeEmbeds}

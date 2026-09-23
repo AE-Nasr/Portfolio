@@ -48,7 +48,7 @@ export const skillGroups: readonly SkillGroup[] = [
   {
     id: "ir",
     label: "Incident Response & Threat Detection",
-    items: ["Alert Triage", "IOC Analysis", "Log Analysis", "Incident Response"],
+    items: ["Security Monitoring", "Incident Detection", "Alert Triage", "IOC Analysis", "Log Analysis", "Incident Response"],
     evidence: [
       { id: "soc326-report", label: "SOC326 — full IR lifecycle" },
       { id: "soc336-report", label: "SOC336 — APT persistence" },
@@ -58,7 +58,7 @@ export const skillGroups: readonly SkillGroup[] = [
   {
     id: "identity",
     label: "Identity & Access Security",
-    items: ["IAM", "PAM", "DAM", "RBAC", "ABAC"],
+    items: ["IAM", "PAM", "DAM", "RBAC", "ABAC", "Access Control"],
     evidence: [
       { id: "iam-access-control-room", label: "IAM & access control" },
       { id: "aws-kms-security", label: "AWS KMS key management" },
@@ -92,12 +92,18 @@ export const skillGroups: readonly SkillGroup[] = [
   {
     id: "frameworks",
     label: "Security Frameworks",
-    items: ["MITRE ATT&CK", "NIST CSF", "NIST 800-61", "Cyber Kill Chain", "ISO 27001", "PCI DSS"],
+    items: ["MITRE ATT&CK", "NIST CSF", "NIST 800-61", "NIST 800-53", "Cyber Kill Chain", "ISO 27001", "PCI DSS"],
   },
   {
     id: "os",
     label: "Operating Systems",
     items: ["Windows", "Windows Server", "Ubuntu", "Kali Linux", "Arch Linux"],
+  },
+  {
+    // من الـ CV — مجموعة كاملة كانت غايبة عن الموقع.
+    id: "soft",
+    label: "Soft Skills",
+    items: ["Analytical Thinking", "Problem Solving", "Team Collaboration", "Communication", "Adaptability", "Attention to Detail"],
   },
 ];
 

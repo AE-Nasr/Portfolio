@@ -69,6 +69,13 @@ export const certifications: readonly Certification[] = [
     year: 2025,
   },
   {
+    // من الـ CV — كانت غايبة عن الموقع تماماً.
+    id: "thm-soc-l1-l2",
+    name: "SOC Level 1 & SOC Level 2 Learning Paths",
+    issuer: "TryHackMe",
+    year: 2025,
+  },
+  {
     id: "cti-101",
     name: "Cyber Threat Intelligence 101",
     issuer: "arcX",

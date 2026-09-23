@@ -67,7 +67,7 @@ export const viewport: Viewport = {
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ahmed-emad-nasr.github.io/Portfolio/"),
+  metadataBase: new URL("https://ae-nasr.github.io/Portfolio/"),
   applicationName: "Ahmed Emad Nasr Portfolio",
   appleWebApp: {
     capable: true,
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
      *
      * عنوان مطلق كامل، زي صور الـ OG في page.tsx بالظبط.
      */
-    startupImage: ["https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp"],
+    startupImage: ["https://ae-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp"],
   },
   /*
    * الـ metadata كانت فيها appleWebApp.capable = true من غير أي أيقونة —
@@ -133,7 +133,7 @@ manifest: "manifest.webmanifest",
     title: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | SOC & Cybersecurity Analyst",
     description: "Incident response, threat hunting, DFIR, and cybersecurity training from Ahmed Emad Nasr.",
     type: "website",
-    url: "https://ahmed-emad-nasr.github.io/Portfolio/",
+    url: "https://ae-nasr.github.io/Portfolio/",
     locale: "en_US",
     siteName: "Ahmed Emad Nasr Portfolio",
     images: [{
@@ -205,17 +205,17 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
   "@graph": [
     {
       "@type": "Person",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person",
+      "@id": "https://ae-nasr.github.io/Portfolio/#person",
       name: "Ahmed Emad Nasr",
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
-      image: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp",
+      url: "https://ae-nasr.github.io/Portfolio/",
+      image: "https://ae-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp",
       jobTitle: ["SOC Analyst", "Incident Response Analyst", "Cybersecurity Analyst"],
       /* knowsAbout هو الحقل اللي جوجل بيستخدمه لفهم مجال الشخص. المهارات
          كانت متناثرة كتاجات في الـ JSX ومحدش مصدّرها كبيانات — دلوقتي
          مصدر واحد في config/skills.ts بيغذّي العرض والـ JSON-LD مع بعض. */
       knowsAbout: skillGroups.flatMap((group) => group.items),
       /* الشهادات كانت 74 صورة، صفر منها مفهوم لأي crawler. */
-      hasCredential: certificationsJsonLd("https://ahmed-emad-nasr.github.io/Portfolio/#person"),
+      hasCredential: certificationsJsonLd("https://ae-nasr.github.io/Portfolio/#person"),
       /* قسم الجوايز كان في الـ CV ومش موجود على الموقع بأي شكل. */
       award: achievements.map((item) => `${item.title} — ${item.context}`),
       description: "SOC Analyst and Incident Response Analyst focused on DFIR, Threat Hunting, and Security Operations.",
@@ -233,46 +233,46 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       sameAs: [
         "https://www.linkedin.com/in/ahmed-emad-nasr/",
         "https://x.com/0x3omda",
-        "https://github.com/Ahmed-Emad-Nasr",
+        "https://github.com/AE-Nasr",
       ],
     },
     {
       "@type": "WebSite",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website",
+      "@id": "https://ae-nasr.github.io/Portfolio/#website",
       name: "Ahmed Emad Nasr Portfolio",
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
+      url: "https://ae-nasr.github.io/Portfolio/",
       inLanguage: "en",
     },
     {
       "@type": "ProfilePage",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#profilepage",
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
-      mainEntity: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person" },
-      isPartOf: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website" },
+      "@id": "https://ae-nasr.github.io/Portfolio/#profilepage",
+      url: "https://ae-nasr.github.io/Portfolio/",
+      mainEntity: { "@id": "https://ae-nasr.github.io/Portfolio/#person" },
+      isPartOf: { "@id": "https://ae-nasr.github.io/Portfolio/#website" },
     },
     {
       "@type": "BreadcrumbList",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#breadcrumbs",
+      "@id": "https://ae-nasr.github.io/Portfolio/#breadcrumbs",
       itemListElement: [
         /* اتشال عنصر Contact — القسم مبقاش موجود، وbreadcrumb بيشاور على
            anchor ميت بيبوظ الـ rich result في نتايج البحث. */
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://ahmed-emad-nasr.github.io/Portfolio/" },
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://ae-nasr.github.io/Portfolio/" },
       ],
     },
     {
       "@type": "WebPage",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#homepage",
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
+      "@id": "https://ae-nasr.github.io/Portfolio/#homepage",
+      url: "https://ae-nasr.github.io/Portfolio/",
       name: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Professional",
       description: "A portfolio homepage highlighting cybersecurity work, SIEM/EDR projects, malware analysis, and professional experience.",
-      isPartOf: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website" },
-      primaryImageOfPage: { "@type": "ImageObject", url: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp" },
-      about: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person" },
+      isPartOf: { "@id": "https://ae-nasr.github.io/Portfolio/#website" },
+      primaryImageOfPage: { "@type": "ImageObject", url: "https://ae-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp" },
+      about: { "@id": "https://ae-nasr.github.io/Portfolio/#person" },
       inLanguage: "en",
     },
     {
       "@type": "ItemList",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#experience-list",
+      "@id": "https://ae-nasr.github.io/Portfolio/#experience-list",
       name: "Education and Experience Timeline",
       itemListElement: knowledgeEducationItems.map((item, index) => ({
         "@type": "ListItem",

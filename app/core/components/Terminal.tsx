@@ -177,7 +177,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
           printAll([
             "email     ahmed.em.nasr@gmail.com",
             "linkedin  linkedin.com/in/ahmed-emad-nasr",
-            "github    github.com/Ahmed-Emad-Nasr",
+            "github    github.com/AE-Nasr",
           ]);
           break;
 
