@@ -307,6 +307,9 @@ const SenseiHome = memo(function SenseiHome() {
             <a href="#Projects" className={`${styles.btn} ${styles.btnProjects}`}>
               View Projects <Icon name="faBriefcase" />
             </a>
+            <a href="#Certifications" className={`${styles.btn} ${styles.btnCertifications}`}>
+              View Certifications <Icon name="faCertificate" />
+            </a>
             <a href="mailto:ahmed.em.nasr@gmail.com" className={`${styles.btn} ${styles.btnEmail}`}>
               Email Me <Icon name="faEnvelope" />
             </a>
