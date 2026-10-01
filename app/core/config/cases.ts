@@ -78,6 +78,20 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "information-disclosure-module": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Information_Disclosure_Module/${i + 1}.webp`),
+  "idor-live-chat": [
+    "Assets/Cases/IDOR/Screenshot (283).webp",
+    "Assets/Cases/IDOR/Screenshot (284).webp",
+    "Assets/Cases/IDOR/Screenshot (285).webp",
+    "Assets/Cases/IDOR/Screenshot (286).webp",
+    "Assets/Cases/IDOR/Screenshot (287).webp",
+    "Assets/Cases/IDOR/Screenshot (288).webp",
+    "Assets/Cases/IDOR/Screenshot (289).webp",
+    "Assets/Cases/IDOR/Screenshot (290).webp",
+    "Assets/Cases/IDOR/Screenshot (291).webp",
+    "Assets/Cases/IDOR/Screenshot (292).webp",
+    "Assets/Cases/IDOR/Screenshot (293).webp"
+  ],
   "monitoring-active-directory": Array.from({ length: 10 }, (_, i) => `Assets/Cases/Monitoring_Active_Directory/${i + 1}.webp`),
   "defensive-security-trends": Array.from({ length: 4 }, (_, i) => `Assets/Cases/Defensive_Security_Trends/Screenshot (${195 + i}).webp`),
   "report-writing-soc-l2": Array.from({ length: 5 }, (_, i) => `Assets/Cases/Report_Writing_SOC_L2/Screenshot (${190 + i}).webp`),
@@ -952,6 +966,52 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-09-01",
     screenshots: Array.from({ length: 10 }, (_, i) => `Assets/Cases/Monitoring_Active_Directory/${i + 1}.webp`),
     image: "Assets/Cases/Monitoring_Active_Directory/6.webp",
+  },
+  {
+    id: "information-disclosure-module",
+    title: "Information Disclosure Module",
+    description: "Completed the Information Disclosure module on PortSwigger Web Security Academy. This comprehensive walkthrough covers solving multiple vulnerabilities: utilizing 'wget' and 'Git Cola' to dump and analyze exposed '.git' directories to recover hardcoded admin credentials from version control history, exploiting HTTP headers (X-Custom-IP-Authorization) via Burp Suite to bypass authentication, extracting sensitive environment variables (SECRET_KEY) from exposed phpinfo debug pages, and discovering sensitive backend logic via hidden source code backup files.",
+    platform: "PortSwigger",
+    type: "Module Walkthrough",
+    category: "Web Security",
+    difficulty: "Medium",
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    tags: ["PortSwigger", "Web Security", "Information Disclosure", "Git", "Burp Suite", "Authentication Bypass", "Source Code Disclosure"],
+    tools: ["Burp Suite", "Git Cola", "wget", "Browser DevTools"],
+    skillsGained: ["Git Repository Analysis", "Sensitive Data Exposure Identification", "Access Control Bypass", "Directory Enumeration", "HTTP Header Manipulation"],
+    readTime: 25,
+    date: "2026-10-01",
+    screenshots: Array.from({ length: 16 }, (_, i) => `Assets/Cases/Information_Disclosure_Module/${i + 1}.webp`),
+    image: "Assets/Cases/Information_Disclosure_Module/16.webp",
+  },
+  {
+    id: "idor-live-chat",
+    title: "Insecure Direct Object References",
+    description: "Completed the 'Insecure direct object references' lab on PortSwigger. Exploited an IDOR vulnerability in the live chat feature by intercepting the transcript download request with Burp Suite. Manipulated the filename parameter to access previous chat logs (1.txt), disclosing sensitive information including the password for the user 'carlos', which was then used to successfully compromise the account and solve the lab.",
+    platform: "PortSwigger",
+    type: "Walkthrough",
+    category: "Web Security",
+    difficulty: "Easy",
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    tags: ["PortSwigger", "Web Security", "IDOR", "Access Control", "Burp Suite", "Information Disclosure"],
+    tools: ["Burp Suite"],
+    skillsGained: ["IDOR Exploitation", "Parameter Manipulation", "Access Control Vulnerabilities"],
+    readTime: 10,
+    date: "2026-10-01",
+    screenshots: [
+      "Assets/Cases/IDOR/Screenshot (283).webp",
+      "Assets/Cases/IDOR/Screenshot (284).webp",
+      "Assets/Cases/IDOR/Screenshot (285).webp",
+      "Assets/Cases/IDOR/Screenshot (286).webp",
+      "Assets/Cases/IDOR/Screenshot (287).webp",
+      "Assets/Cases/IDOR/Screenshot (288).webp",
+      "Assets/Cases/IDOR/Screenshot (289).webp",
+      "Assets/Cases/IDOR/Screenshot (290).webp",
+      "Assets/Cases/IDOR/Screenshot (291).webp",
+      "Assets/Cases/IDOR/Screenshot (292).webp",
+      "Assets/Cases/IDOR/Screenshot (293).webp"
+    ],
+    image: "Assets/Cases/IDOR/Screenshot (293).webp",
   },
 ] as const;
 
